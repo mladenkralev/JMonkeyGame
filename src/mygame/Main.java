@@ -17,9 +17,11 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
+import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
@@ -45,6 +47,8 @@ public class Main extends SimpleApplication {
     private Material brick_mat;
     private Material floor_mat;
 
+    private CameraNode camNode;
+    
     private static final Box floor;
     private static final Box fake_player_box;
     private Geometry player_geometry;
@@ -94,6 +98,14 @@ public class Main extends SimpleApplication {
         player_character_control.setPhysicsLocation(new Vector3f(0, 10, 0));
         bulletAppState.getPhysicsSpace().add(player_character_control);
 
+           // set forward camera node that follows the character
+        camNode = new CameraNode("CamNode", cam);
+        camNode.setControlDir(ControlDirection.SpatialToCamera);
+        camNode.setLocalTranslation(new Vector3f(0, 1, -5));
+        camNode.lookAt(player_geometry.getLocalTranslation(), Vector3f.UNIT_Y);
+        
+        
+        
         // You must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));
@@ -150,11 +162,8 @@ public class Main extends SimpleApplication {
                     }   
                     break;
                 case "Jump":
-                    if (isPressed) {
-                        jump = true;
-                    } else {
-                        jump = false;
-                    }  
+                    /** Located here only one jump allowed ber frame*/
+                    player_character_control.jump();
                     break;
                 default:
                     break;
@@ -176,9 +185,7 @@ public class Main extends SimpleApplication {
         }
         player_character_control.setWalkDirection(walkDirection);
 
-        if (jump) {
-            player_character_control.jump();
-        }
+     
     }
 
     @Override
