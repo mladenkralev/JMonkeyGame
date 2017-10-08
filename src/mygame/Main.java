@@ -97,14 +97,6 @@ public class Main extends SimpleApplication {
 
         player_character_control.setPhysicsLocation(new Vector3f(0, 10, 0));
         bulletAppState.getPhysicsSpace().add(player_character_control);
-
-           // set forward camera node that follows the character
-        camNode = new CameraNode("CamNode", cam);
-        camNode.setControlDir(ControlDirection.SpatialToCamera);
-        camNode.setLocalTranslation(new Vector3f(0, 1, -5));
-        camNode.lookAt(player_geometry.getLocalTranslation(), Vector3f.UNIT_Y);
-        
-        
         
         // You must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
@@ -184,6 +176,7 @@ public class Main extends SimpleApplication {
             }
         }
         player_character_control.setWalkDirection(walkDirection);
+        cam.lookAt(player_geometry.getLocalTranslation(), Vector3f.UNIT_Y);
 
      
     }
@@ -235,8 +228,6 @@ public class Main extends SimpleApplication {
                 assetManager.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
 
         floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-
-        floor_mat.setColor("Color", ColorRGBA.Red);
 
         TextureKey key3 = new TextureKey("Textures/Terrain/Pond/Pond.jpg");
         key3.setGenerateMips(true);
